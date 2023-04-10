@@ -23,7 +23,7 @@ namespace Leadpipe\Vendors {
         
             VendorsRegistry::get_instance()->register($this);
 
-            // $this.hook_submissions();
+            add_action('wpforms_process', [$this, 'on_submission'], 10, 3)
 
         }
         
@@ -35,7 +35,36 @@ namespace Leadpipe\Vendors {
         * @since 1.0.0
         */
         public function hook_submissions() {
+
+            require_once plugin_dir_path( __DIR__ ) . "crm/CRMRegistry.php";
+
+            $crm = \Leadpipe\CRM\CRMRegistry::get_instance()->get_current_crm();
+
+            if ($crm) add_action('wpforms_process', [$this, 'on_submission'], 10, 3);
             
+        }
+        
+        /**
+        * Handle submission and forward it to current CRM method on_form_submit(...)
+        * 
+        * @param object $fields Parameter which comes from WPForms action
+        * @param object $entry Parameter which comes from WPForms action
+        * @param object $formData Parameter which comes from WPForms action
+        * @since 1.0.0
+        */
+        public function on_submission($fields, $entry, $formData) {
+
+            require_once plugin_dir_path( __DIR__ ) . "FilledForm.php";
+            require_once plugin_dir_path( __DIR__ ) . "crm/CRMRegistry.php";
+
+            $filledForm = new \Leadpipe\Core\FilledForm();
+
+            foreach ($fields as $field)
+                $filledForm.set_field($fields['name'], $fields['value']);
+
+            $crm = \Leadpipe\CRM\CRMRegistry::get_instance()->get_current_crm();
+
+            if ($crm) $crm->on_form_submit($filledForm);
         }
 
         /**

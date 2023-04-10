@@ -85,10 +85,10 @@ namespace Leadpipe\CRM {
          * Handles form submission and sends data to CRM.
          * 
          * @since 1.0.0
-         * @param object $formData Submission data from vendor.
+         * @param Leadpipe\Core\FilledForm $filledForm Submission data from vendor.
          */
-        public function on_form_submit($formData) {
-
+        public function on_form_submit($filledForm) {
+            
         }
 
         /**

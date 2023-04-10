@@ -18,5 +18,5 @@ include 'crm/PipedriveCRM.php';
 /**
  * Core
  */
-include 'rest/forms_endpoint.php';
+include 'rest/FormsEndpoint.php';
 include 'rest/CRMEndpoint.php';
