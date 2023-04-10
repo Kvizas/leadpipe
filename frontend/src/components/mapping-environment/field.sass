@@ -1,0 +1,98 @@
+@use "../../style/variables.sass" as *
+
+.field
+    user-select: none
+    padding: 8px 16px
+    border-radius: 3px
+    border: 1px solid transparent
+    transition: background .2s, opacity .2s
+
+    &__wrapper
+        display: grid
+
+        &--left
+            grid: auto-flow / 1fr 1fr
+            gap: 8px
+
+        &--right
+            grid: auto-flow / 1fr auto
+            gap: 8px
+
+    &__label
+        width: 50%
+        margin-top: 6px
+        grid-column: span 2
+
+        &--required::after
+            content: "⋆"
+            color: red
+            margin-left: 3px
+
+    &__left
+        background: $primary-color
+        color: white
+        cursor: pointer
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, .1)
+        z-index: 1
+        
+        &:hover
+            z-index: 2
+            background: adjust-color($primary-color, $red: 20, $green: 20, $blue: 20)
+            transform: translateY(-1px)
+
+    &__right
+        border: 1px solid rgba(0, 0, 0, .2)
+        width: -webkit-fill-available
+
+    &__creator
+        border: none
+        outline: 3px solid $primary-color
+
+    &__submit
+        cursor: pointer
+            
+        path
+            fill: $primary-color
+            transition: fill .2s
+
+        &:hover
+            path
+                fill: darken($primary-color, 10%)
+
+    &__edit
+        margin: auto
+        height: 20px
+
+    &__remove
+        cursor: pointer
+            
+        path
+            fill: #565656
+            transition: fill .2s
+
+        &:hover
+            path
+                fill: #AE2828
+
+    &__add
+        cursor: pointer
+        color: $primary-color
+        opacity: .75
+        transition: opacity .2s
+        
+        svg
+            margin-right: 8px
+
+            path
+                fill: $primary-color
+
+        &:hover
+            opacity: 1
+
+    &--dragging
+        transition: background .2s
+
+    &--dropping
+        background: $primary-color
+        color: white
+        opacity: .3

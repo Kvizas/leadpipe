@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "@wordpress/scripts": "^25.4.0"
+  },
+  "name": "leadpipe",
+  "version": "1.0.0",
+  "description": "Leadpipe is a wordpress plugin to use forms data in CRM and GA4",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start"
+  },
+  "author": "RAIBEC",
+  "license": "ISC",
+  "dependencies": {
+    "@dnd-kit/core": "^6.0.8",
+    "react-uuid": "^2.0.0"
+  }
+}
