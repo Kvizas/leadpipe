@@ -53,8 +53,9 @@ namespace Leadpipe\CRM {
          * 
          * @since 1.0.0
          * @param Leadpipe\Core\FilledForm $filledForm Submission data from vendor.
+         * @param Leadpipe\Core\Form|object $form Form data or an object with ['vendor' => '', 'ID' => 00] fields describing the form.
          */
-        abstract public function on_form_submit($filledForm);
+        abstract public function on_form_submit($filledForm, $form);
 
         /**
          * Returns an array of SchemaObject that is considered as default schema.

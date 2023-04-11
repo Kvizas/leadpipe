@@ -54,11 +54,13 @@ namespace Leadpipe\Vendors {
             $filledForm = new \Leadpipe\Core\FilledForm();
 
             foreach ($fields as $field)
-                $filledForm.set_field($fields['name'], $fields['value']);
-
+                $filledForm->set_field($field['name'], $field['value']);
+            
             $crm = \Leadpipe\CRM\CRMRegistry::get_instance()->get_current_crm();
 
-            if ($crm) $crm->on_form_submit($filledForm);
+            if ($crm) $crm->on_form_submit($filledForm, (object) ['ID' => $formData['id'], 'vendor' => $this->name]);
+
+            return $fields;
         }
 
         /**

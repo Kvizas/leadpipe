@@ -10,6 +10,11 @@ class SchemaObject {
     public $title;
 
     /**
+     * @var string Title of the schema object.
+     */
+    public $key;
+
+    /**
      * @var bool True if this object can have custom fields.
      */
     public $customizableFields;
@@ -31,8 +36,9 @@ class SchemaObject {
      * @param string $title
      * @param SchemaField[] $fields
      */
-    public function __construct($title, $fields, $customizableFields = true, $required = false) {
+    public function __construct($title, $key, $fields, $customizableFields = true, $required = false) {
         $this->title = $title;
+        $this->key = $key;
         $this->fields = $fields;
         $this->customizableFields = $customizableFields;
         $this->required = $required;

@@ -82,12 +82,74 @@ namespace Leadpipe\CRM {
         }
 
         /**
+         * HTTP Post requests to Pipedrive API.
+         * 
+         * @since 1.0.0
+         * @param string $endpoint Pipedrive API endpoint.
+         * @param mixed $body Body of the request.
+         * @param string $authData Authentification data. (Optional)
+         * @return object Response.
+         */
+        public function pipedrive_post($endpoint, $body, $authData = null) {
+
+            if ($authData == null)
+                $authData = $this->get_auth_data();
+
+            $url = $authData["Pipedrive URL"] . "/" . $endpoint . "?api_token=" . $authData["Pipedrive API Token"];
+        
+            $resp = httpPost($url, $body);
+            return json_decode($resp);
+
+        }
+
+        /**
          * Handles form submission and sends data to CRM.
          * 
          * @since 1.0.0
          * @param Leadpipe\Core\FilledForm $filledForm Submission data from vendor.
+         * @param Leadpipe\Core\Form|object $form Form data or an object with ['vendor' => '', 'ID' => 00] fields describing the form.
          */
-        public function on_form_submit($filledForm) {
+        public function on_form_submit($filledForm, $form) {
+
+            $schema = $this->get_schema_map($form);
+
+            $org_id = -1;
+            $person_id = -1;
+            $lead_id = -1;
+
+            foreach ($schema as $schemaObj) {
+                $crmFields = [];
+
+                foreach ($schemaObj->fields as $schemaField) {
+                    if ($schemaField->source == "form") {
+                        $crmFields[$schemaField->key] = $filledForm->get_field($schemaField->valueField);
+                    }
+                }
+
+                if (count($crmFields) < 1) continue;
+
+                if ($schemaObj->key == "persons" && $org_id != -1)
+                    $crmFields['org_id'] = $org_id;
+
+                else if ($schemaObj->key == "leads") {
+                    $crmFields['person_id'] = $person_id;
+                    if ($org_id != -1) $crmFields['org_id'] = $org_id;
+                }
+
+                else if ($schemaObj->key == "notes")
+                    $crmFields['lead_id'] = $lead_id;
+
+                $response = $this->pipedrive_post($schemaObj->key, $crmFields);
+
+                if ($schemaObj->key == "organizations")
+                    $org_id = $response->data->id;
+                    
+                else if ($schemaObj->key == "persons")
+                    $person_id = $response->data->id;
+                    
+                else if ($schemaObj->key == "leads")
+                    $lead_id = $response->data->id;
+            }
             
         }
 
@@ -160,13 +222,13 @@ namespace Leadpipe\CRM {
             require_once plugin_dir_path( __DIR__ ) . "SchemaObject.php";
             require_once plugin_dir_path( __DIR__ ) . "SchemaField.php";
 
-            $orgSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Organization", [
+            $orgSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Organization", "organizations", [
                 new \Leadpipe\Core\SchemaField("Name", "name", true, false)
             ], true, false);
 
             $orgSchemaObj = $this->append_custom_fields("organizationFields", $orgSchemaObj);
 
-            $personSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Person", [
+            $personSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Person", "persons", [
                 new \Leadpipe\Core\SchemaField("Name", "name", true, false),
                 new \Leadpipe\Core\SchemaField("Email", "email", false, false),
                 new \Leadpipe\Core\SchemaField("Phone", "phone", false, false),
@@ -175,7 +237,7 @@ namespace Leadpipe\CRM {
 
             $personSchemaObj = $this->append_custom_fields("personFields", $personSchemaObj);
 
-            $leadSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Lead", [
+            $leadSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Lead", "leads", [
                 new \Leadpipe\Core\SchemaField("Title", "title", true, false),
                 new \Leadpipe\Core\SchemaField("Potential value", "value", false, false),
                 // new \Leadpipe\Core\SchemaField("GA Session ID", "ga_session_id", false, false, "internal", "GA Session ID") // TODO Auto add ga_session_id to pipedrive
@@ -183,7 +245,7 @@ namespace Leadpipe\CRM {
 
             $leadSchemaObj = $this->append_custom_fields("dealFields", $leadSchemaObj);
 
-            $noteSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Note", [
+            $noteSchemaObj = new \Leadpipe\Core\SchemaObject("Pipedrive Note", "notes", [
                 new \Leadpipe\Core\SchemaField("Content", "content", true, false)
             ], false, false);
 

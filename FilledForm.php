@@ -16,7 +16,7 @@ class FilledForm {
      * @var array Where key is field name and value is value.
      * @since 1.0.0
      */
-    private $fields = [];
+    private $fields = array();
 
     /**
      * Field setter.
@@ -24,7 +24,7 @@ class FilledForm {
      * @since 1.0.0
      */
     public function set_field($fieldName, $value) {
-        $fields[$fieldName] = $value;
+        $this->$fields[$fieldName] = $value;
     }
 
     /**
@@ -33,7 +33,7 @@ class FilledForm {
      * @since 1.0.0
      */
     public function get_field($fieldName) {
-        return $fields[$fieldName];
+        return $this->$fields[$fieldName];
     }
 
     /**
@@ -42,6 +42,6 @@ class FilledForm {
      * @since 1.0.0
      */
     public function get_all_fields() {
-        return $fields;
+        return $this->$fields;
     }
 }
