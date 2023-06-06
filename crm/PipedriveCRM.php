@@ -341,11 +341,28 @@ namespace Leadpipe\CRM {
          * Adds field to the CRM object.
          * 
          * @since 1.0.0
-         * @param string $objectName Name of the CRM object.
-         * @param string $fieldId ID of the CRM object field.
+         * @param string $objectKey Key of the CRM object.
+         * @param $fieldName Name of the creating field.
+         * 
+         * @return string|null $fieldKey Key of the newly added field or null if there's error.
          */
-        public function add_field($objectName, $fieldId) {
+        public function add_field($objectKey, $fieldName) {
 
+            $endpoints = [
+                "organizations" => "organizationFields",
+                "persons" => "personFields",
+                "leads" => "dealFields",
+            ];
+
+            $resp = $this->pipedrive_post($endpoints[$objectKey], [
+                "name" => $fieldName,
+                "field_type" => "text"
+            ]);
+
+            if ($resp['success'])
+                return $resp['data']['key'];
+
+            return null;
         }
 
         /**

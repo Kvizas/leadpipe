@@ -20,3 +20,4 @@ include 'crm/PipedriveCRM.php';
  */
 include 'rest/FormsEndpoint.php';
 include 'rest/CRMEndpoint.php';
+include 'rest/SchemasEndpoint.php';

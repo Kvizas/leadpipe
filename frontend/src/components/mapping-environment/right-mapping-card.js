@@ -21,7 +21,7 @@ export default function RightMappingCard({ schema }) {
                 )}
                 {
                     schema.customizableFields ?
-                        <RightAddField />
+                        <RightAddField schemaObjKey={schema?.key} />
                         :
                         <></>
                 }

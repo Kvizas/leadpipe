@@ -13,7 +13,7 @@ export default function MappingPipedrive({ formMetadata }) {
     const [errorMsg, setErrorMsg] = useState();
 
     useEffect(async () => {
-        const [status, data] = await wpGet(`crms/${formMetadata.vendor}/${formMetadata.id}`);
+        const [status, data] = await wpGet(`schemas/${formMetadata.vendor}/${formMetadata.id}`);
 
         if (status == 200)
             setSchema(() => {

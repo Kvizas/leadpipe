@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
 import "./field.sass"
-import RightFieldCreation from './right-field-creator';
+import RightFieldCreator from './right-field-creator';
 
-export default function RightAddField() {
+export default function RightAddField({ schemaObjKey }) {
 
     const [isAdding, setIsAdding] = useState(false);
 
@@ -11,8 +11,15 @@ export default function RightAddField() {
         setIsAdding(true);
     }
 
+    const onCreate = () => {
+        setIsAdding(false);
+    }
+
     if (isAdding)
-        return <RightFieldCreation />
+        return <RightFieldCreator
+            schemaObjKey={schemaObjKey}
+            onCreate={onCreate}
+        />
 
 
     return (

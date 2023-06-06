@@ -3,7 +3,7 @@
 namespace Leadpipe\REST {
 
   /**
-   * Class Forms_Endpoint registers Leadpipe REST API routes related with Forms.
+   * Class Forms_Endpoint registers Leadpipe REST API routes related to Forms.
    *
    * @since 1.0.0
    */

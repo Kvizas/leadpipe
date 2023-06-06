@@ -47,18 +47,22 @@ namespace Leadpipe\Vendors {
         * @since 1.0.0
         */
         public function on_submission($fields, $entry, $formData) {
+            try {
+                
+                require_once plugin_dir_path( __DIR__ ) . "FilledForm.php";
+                require_once plugin_dir_path( __DIR__ ) . "crm/CRMRegistry.php";
+    
+                $filledForm = new \Leadpipe\Core\FilledForm();
+    
+                foreach ($fields as $field)
+                    $filledForm->set_field($field['name'], $field['value']);
+                
+                $crm = \Leadpipe\CRM\CRMRegistry::get_instance()->get_current_crm();
+    
+                if ($crm) $crm->on_form_submit($filledForm, (object) ['ID' => $formData['id'], 'vendor' => $this->name]);
 
-            require_once plugin_dir_path( __DIR__ ) . "FilledForm.php";
-            require_once plugin_dir_path( __DIR__ ) . "crm/CRMRegistry.php";
-
-            $filledForm = new \Leadpipe\Core\FilledForm();
-
-            foreach ($fields as $field)
-                $filledForm->set_field($field['name'], $field['value']);
-            
-            $crm = \Leadpipe\CRM\CRMRegistry::get_instance()->get_current_crm();
-
-            if ($crm) $crm->on_form_submit($filledForm, (object) ['ID' => $formData['id'], 'vendor' => $this->name]);
+            }
+            catch (Exception $e) { } // TODO Implement logging or messaging on error
 
             return $fields;
         }

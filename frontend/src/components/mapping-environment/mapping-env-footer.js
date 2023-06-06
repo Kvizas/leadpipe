@@ -17,7 +17,7 @@ export default function MappingEnvironmentFooter({ formMetadata }) {
         setErrorMsg("");
         setSuccessMsg("");
 
-        const [status, data] = await wpPost(`crms/${formMetadata.vendor}/${formMetadata.id}`, schema);
+        const [status, data] = await wpPost(`schemas/${formMetadata.vendor}/${formMetadata.id}`, schema);
 
         if (status == 200)
             setSuccessMsg("Saved successfully.");
